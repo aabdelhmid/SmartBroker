@@ -1,0 +1,249 @@
+{
+    "navbar": {
+        "home": "Home",
+        "buy": "Buy",
+        "rent": "Rent",
+        "sell": "Sell",
+        "agents": "Agents",
+        "login": "Login",
+        "signup": "Sign Up",
+        "profile": "Profile",
+        "dashboard": "Dashboard",
+        "logout": "Logout",
+        "hello": "Hello"
+    },
+    "hero": {
+        "title": "Find Your Dream Property",
+        "subtitle": "Discover the perfect home with SmartBroker - Your trusted real estate partner",
+        "searchPlaceholder": "Search by location, property type, or price..."
+    },
+    "propertyCard": {
+        "beds": "bds",
+        "baths": "ba",
+        "sqft": "sqft"
+    },
+    "propertyDetails": {
+        "beds": "Beds",
+        "baths": "Baths",
+        "sqft": "Square Feet",
+        "description": "Description",
+        "interested": "I'm Interested",
+        "contactAgent": "Contact Agent",
+        "score": "Investment Score"
+    },
+    "auth": {
+        "loginTitle": "Welcome Back",
+        "signupTitle": "Create Account",
+        "email": "Email",
+        "password": "Password",
+        "confirmPassword": "Confirm Password",
+        "name": "Full Name",
+        "phone": "Phone Number",
+        "role": "I am a",
+        "buyer": "Buyer",
+        "marketer": "Marketer",
+        "developer": "Developer",
+        "company": "Company Name",
+        "location": "Location",
+        "budget": "Budget Range",
+        "preferredLocation": "Preferred Location",
+        "commercialRegistration": "Commercial Registration",
+        "loginButton": "Login",
+        "signupButton": "Sign Up",
+        "noAccount": "Don't have an account?",
+        "haveAccount": "Already have an account?",
+        "loginError": "Invalid email or password",
+        "signupSuccess": "Account created successfully!",
+        "emailExists": "Email already exists",
+        "phoneExists": "Phone number already exists"
+    },
+    "dashboard": {
+        "title": "Dashboard",
+        "myProperties": "My Properties",
+        "addProperty": "Add Property",
+        "leads": "Leads",
+        "buyerScore": "Your Buyer Score",
+        "status": {
+            "pending": "Pending",
+            "approved": "Approved",
+            "rejected": "Rejected",
+            "needsRevision": "Needs Revision"
+        },
+        "editProperty": "Edit Property",
+        "viewDetails": "View Details",
+        "noProperties": "No properties yet"
+    },
+    "addProperty": {
+        "title": "Add New Property",
+        "editTitle": "Edit Property",
+        "address": "Address",
+        "price": "Price",
+        "beds": "Bedrooms",
+        "baths": "Bathrooms",
+        "sqft": "Square Feet",
+        "description": "Description",
+        "images": "Property Images",
+        "type": "Property Type",
+        "types": {
+            "apartment": "Apartment",
+            "villa": "Villa",
+            "office": "Office",
+            "land": "Land"
+        },
+        "status": "Status (Admin Only)",
+        "uploadImages": "Upload Images (Max 5, 10MB each)",
+        "submit": "Submit Property",
+        "update": "Update Property",
+        "success": "Property submitted successfully!",
+        "updateSuccess": "Property updated successfully!"
+    },
+    "adminDashboard": {
+        "title": "Admin Dashboard",
+        "welcome": "Welcome, Admin",
+        "sections": {
+            "pendingApprovals": "Pending Approvals",
+            "allProperties": "All Properties",
+            "userManagement": "User Management"
+        },
+        "pendingApprovals": "Pending Approvals",
+        "allProperties": "All Properties",
+        "users": "Users",
+        "addProperty": "Add Property",
+        "approve": "Approve",
+        "reject": "Reject",
+        "sendBack": "Send Back",
+        "edit": "Edit",
+        "delete": "Delete",
+        "search": "Search by address...",
+        "searchUsers": "Search users...",
+        "filterStatus": "All Statuses",
+        "filterType": "All Types",
+        "sortNewest": "Newest First",
+        "sortOldest": "Oldest First",
+        "sortPriceHigh": "Price: High to Low",
+        "sortPriceLow": "Price: Low to High",
+        "noPending": "No pending properties for review.",
+        "noProperties": "No properties match the filters.",
+        "noUsers": "No users found.",
+        "userManagement": "User Management",
+        "addUser": "Add New User",
+        "addUserButton": "Add User",
+        "activate": "Activate",
+        "deactivate": "Deactivate",
+        "active": "Active",
+        "inactive": "Inactive",
+        "deleteConfirm": "Are you sure you want to permanently delete this property?",
+        "deleteUserConfirm": "Delete user?",
+        "filters": "Filters",
+        "sort": "Sort",
+        "actions": "Actions",
+        "status": "Status",
+        "type": "Type",
+        "price": "Price",
+        "location": "Location",
+        "owner": "Owner",
+        "createdAt": "Created",
+        "viewDetails": "View Details"
+    },
+    "featured": {
+        "title": "Featured Properties",
+        "subtitle": "Explore our hand-picked selection of premium properties available for sale and rent.",
+        "viewAll": "View All Properties",
+        "villas": "Villas",
+        "apartments": "Apartments",
+        "noProperties": "No {{type}}s available at the moment."
+    },
+    "whyChoose": {
+        "title": "Why Choose SmartBroker?",
+        "verified": {
+            "title": "Verified Listings",
+            "description": "Every property is verified by our team to ensure authenticity."
+        },
+        "experts": {
+            "title": "Expert Agents",
+            "description": "Work with the top 1% of agents in your area."
+        },
+        "insights": {
+            "title": "Smart Insights",
+            "description": "Get data-driven insights to make the best decision."
+        }
+    },
+    "common": {
+        "loading": "Loading...",
+        "error": "Something went wrong",
+        "save": "Save",
+        "cancel": "Cancel",
+        "close": "Close",
+        "submit": "Submit",
+        "search": "Search",
+        "filter": "Filter",
+        "sort": "Sort",
+        "agent": "Agent",
+        "type": "Type",
+        "accessDenied": "Access Denied. Admin only."
+    },
+    "changePassword": {
+        "title": "Change Password",
+        "currentPassword": "Current Password",
+        "newPassword": "New Password",
+        "confirmPassword": "Confirm New Password",
+        "save": "Save Changes",
+        "cancel": "Cancel",
+        "backToProfile": "Back to Profile",
+        "success": "Password updated successfully!",
+        "error": {
+            "incorrectCurrent": "Current password is incorrect.",
+            "sameAsOld": "New password must be different from the current password.",
+            "mismatch": "Passwords do not match.",
+            "requirements": "Password must be at least 8 characters and include uppercase, lowercase, number, and special character.",
+            "required": "This field is required."
+        },
+        "requirements": {
+            "title": "Password Requirements:",
+            "minLength": "At least 8 characters",
+            "uppercase": "At least 1 uppercase letter",
+            "lowercase": "At least 1 lowercase letter",
+            "number": "At least 1 number",
+            "special": "At least 1 special character (!@#$%^&*)"
+        }
+    },
+    "hero": {
+        "title": "Find Your Dream Home",
+        "subtitle": "The smartest way to buy, rent, and sell properties.",
+        "searchPlaceholder": "Enter an address, neighborhood, city, or ZIP code"
+    },
+    "home": {
+        "featuredProperties": "Featured Properties",
+        "featuredDescription": "Explore our hand-picked selection of premium properties available for sale and rent.",
+        "whyChooseUs": "Why Choose SmartBroker?",
+        "viewAllProperties": "View All Properties",
+        "tabs": {
+            "villas": "Villas",
+            "apartments": "Apartments",
+            "all": "All"
+        },
+        "features": {
+            "verifiedListings": "Verified Listings",
+            "verifiedDescription": "Every property is verified by our team to ensure authenticity.",
+            "expertAgents": "Expert Agents",
+            "expertDescription": "Work with the top 1% of agents in your area.",
+            "smartInsights": "Smart Insights",
+            "smartDescription": "Get data-driven insights to make the best decision."
+        }
+    },
+    "footer": {
+        "company": "Company",
+        "aboutUs": "About Us",
+        "careers": "Careers",
+        "blog": "Blog",
+        "press": "Press",
+        "support": "Support",
+        "helpCenter": "Help Center",
+        "termsOfService": "Terms of Service",
+        "privacyPolicy": "Privacy Policy",
+        "contactUs": "Contact Us",
+        "contact": "Contact",
+        "tagline": "Your trusted partner in finding the perfect property. Connecting buyers, sellers, and agents seamlessly.",
+        "copyright": "© 2025 SmartBroker. All rights reserved. Built with ❤️ using React and Vite"
+    }
+}

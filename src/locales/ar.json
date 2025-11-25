@@ -1,0 +1,249 @@
+{
+    "navbar": {
+        "home": "الرئيسية",
+        "buy": "شراء",
+        "rent": "إيجار",
+        "sell": "بيع",
+        "agents": "الوكلاء",
+        "login": "تسجيل الدخول",
+        "signup": "إنشاء حساب",
+        "profile": "الملف الشخصي",
+        "dashboard": "لوحة التحكم",
+        "logout": "تسجيل الخروج",
+        "hello": "مرحباً"
+    },
+    "hero": {
+        "title": "اعثر على عقارك المثالي",
+        "subtitle": "اكتشف المنزل المثالي مع سمارت بروكر - شريكك الموثوق في العقارات",
+        "searchPlaceholder": "ابحث بالموقع، نوع العقار، أو السعر..."
+    },
+    "propertyCard": {
+        "beds": "غرف",
+        "baths": "حمام",
+        "sqft": "قدم²"
+    },
+    "propertyDetails": {
+        "beds": "غرف النوم",
+        "baths": "الحمامات",
+        "sqft": "المساحة بالقدم المربع",
+        "description": "الوصف",
+        "interested": "أنا مهتم",
+        "contactAgent": "تواصل مع الوكيل",
+        "score": "درجة الاستثمار"
+    },
+    "auth": {
+        "loginTitle": "مرحباً بعودتك",
+        "signupTitle": "إنشاء حساب جديد",
+        "email": "البريد الإلكتروني",
+        "password": "كلمة المرور",
+        "confirmPassword": "تأكيد كلمة المرور",
+        "name": "الاسم الكامل",
+        "phone": "رقم الهاتف",
+        "role": "أنا",
+        "buyer": "مشتري",
+        "marketer": "مسوق",
+        "developer": "مطور",
+        "company": "اسم الشركة",
+        "location": "الموقع",
+        "budget": "نطاق الميزانية",
+        "preferredLocation": "الموقع المفضل",
+        "commercialRegistration": "السجل التجاري",
+        "loginButton": "تسجيل الدخول",
+        "signupButton": "إنشاء حساب",
+        "noAccount": "ليس لديك حساب؟",
+        "haveAccount": "لديك حساب بالفعل؟",
+        "loginError": "البريد الإلكتروني أو كلمة المرور غير صحيحة",
+        "signupSuccess": "تم إنشاء الحساب بنجاح!",
+        "emailExists": "البريد الإلكتروني مستخدم بالفعل",
+        "phoneExists": "رقم الهاتف مستخدم بالفعل"
+    },
+    "dashboard": {
+        "title": "لوحة التحكم",
+        "myProperties": "عقاراتي",
+        "addProperty": "إضافة عقار",
+        "leads": "العملاء المحتملون",
+        "buyerScore": "درجتك كمشتري",
+        "status": {
+            "pending": "قيد الانتظار",
+            "approved": "موافق عليه",
+            "rejected": "مرفوض",
+            "needsRevision": "يحتاج مراجعة"
+        },
+        "editProperty": "تعديل العقار",
+        "viewDetails": "عرض التفاصيل",
+        "noProperties": "لا توجد عقارات بعد"
+    },
+    "addProperty": {
+        "title": "إضافة عقار جديد",
+        "editTitle": "تعديل العقار",
+        "address": "العنوان",
+        "price": "السعر",
+        "beds": "غرف النوم",
+        "baths": "الحمامات",
+        "sqft": "المساحة بالقدم المربع",
+        "description": "الوصف",
+        "images": "صور العقار",
+        "type": "نوع العقار",
+        "types": {
+            "apartment": "شقة",
+            "villa": "فيلا",
+            "office": "مكتب",
+            "land": "أرض"
+        },
+        "status": "الحالة (للمسؤول فقط)",
+        "uploadImages": "تحميل الصور (بحد أقصى 5، 10 ميجابايت لكل صورة)",
+        "submit": "إرسال العقار",
+        "update": "تحديث العقار",
+        "success": "تم إرسال العقار بنجاح!",
+        "updateSuccess": "تم تحديث العقار بنجاح!"
+    },
+    "adminDashboard": {
+        "title": "لوحة تحكم المسؤول",
+        "welcome": "مرحباً، المسؤول",
+        "sections": {
+            "pendingApprovals": "الموافقات المعلقة",
+            "allProperties": "جميع العقارات",
+            "userManagement": "إدارة المستخدمين"
+        },
+        "pendingApprovals": "الموافقات المعلقة",
+        "allProperties": "جميع العقارات",
+        "users": "المستخدمون",
+        "addProperty": "إضافة عقار",
+        "approve": "موافقة",
+        "reject": "رفض",
+        "sendBack": "إرجاع",
+        "edit": "تعديل",
+        "delete": "حذف",
+        "search": "البحث بالعنوان...",
+        "searchUsers": "البحث عن مستخدمين...",
+        "filterStatus": "جميع الحالات",
+        "filterType": "جميع الأنواع",
+        "sortNewest": "الأحدث أولاً",
+        "sortOldest": "الأقدم أولاً",
+        "sortPriceHigh": "السعر: من الأعلى إلى الأدنى",
+        "sortPriceLow": "السعر: من الأدنى إلى الأعلى",
+        "noPending": "لا توجد عقارات معلقة للمراجعة.",
+        "noProperties": "لا توجد عقارات تطابق الفلاتر.",
+        "noUsers": "لم يتم العثور على مستخدمين.",
+        "userManagement": "إدارة المستخدمين",
+        "addUser": "إضافة مستخدم جديد",
+        "addUserButton": "إضافة مستخدم",
+        "activate": "تفعيل",
+        "deactivate": "تعطيل",
+        "active": "نشط",
+        "inactive": "غير نشط",
+        "deleteConfirm": "هل أنت متأكد من حذف هذا العقار نهائياً؟",
+        "deleteUserConfirm": "حذف المستخدم؟",
+        "filters": "الفلاتر",
+        "sort": "الترتيب",
+        "actions": "الإجراءات",
+        "status": "الحالة",
+        "type": "النوع",
+        "price": "السعر",
+        "location": "الموقع",
+        "owner": "المالك",
+        "createdAt": "تاريخ الإنشاء",
+        "viewDetails": "عرض التفاصيل"
+    },
+    "featured": {
+        "title": "العقارات المميزة",
+        "subtitle": "استكشف مجموعتنا المختارة من العقارات المتميزة المتاحة للبيع والإيجار.",
+        "viewAll": "عرض جميع العقارات",
+        "villas": "الفلل",
+        "apartments": "الشقق",
+        "noProperties": "لا توجد {{type}} متاحة في الوقت الحالي."
+    },
+    "whyChoose": {
+        "title": "لماذا تختار سمارت بروكر؟",
+        "verified": {
+            "title": "قوائم موثقة",
+            "description": "يتم التحقق من كل عقار من قبل فريقنا لضمان الأصالة."
+        },
+        "experts": {
+            "title": "وكلاء خبراء",
+            "description": "اعمل مع أفضل 1٪ من الوكلاء في منطقتك."
+        },
+        "insights": {
+            "title": "رؤى ذكية",
+            "description": "احصل على رؤى مدعومة بالبيانات لاتخاذ أفضل قرار."
+        }
+    },
+    "common": {
+        "loading": "جاري التحميل...",
+        "error": "حدث خطأ ما",
+        "save": "حفظ",
+        "cancel": "إلغاء",
+        "close": "إغلاق",
+        "submit": "إرسال",
+        "search": "بحث",
+        "filter": "تصفية",
+        "sort": "ترتيب",
+        "agent": "الوكيل",
+        "type": "النوع",
+        "accessDenied": "تم رفض الوصول. للمسؤول فقط."
+    },
+    "changePassword": {
+        "title": "تغيير كلمة المرور",
+        "currentPassword": "كلمة المرور الحالية",
+        "newPassword": "كلمة المرور الجديدة",
+        "confirmPassword": "تأكيد كلمة المرور الجديدة",
+        "save": "حفظ التغييرات",
+        "cancel": "إلغاء",
+        "backToProfile": "العودة إلى الملف الشخصي",
+        "success": "تم تحديث كلمة المرور بنجاح!",
+        "error": {
+            "incorrectCurrent": "كلمة المرور الحالية غير صحيحة.",
+            "sameAsOld": "يجب أن تكون كلمة المرور الجديدة مختلفة عن الحالية.",
+            "mismatch": "كلمات المرور غير متطابقة.",
+            "requirements": "يجب أن تكون كلمة المرور 8 أحرف على الأقل وتتضمن أحرف كبيرة وصغيرة ورقم ورمز خاص.",
+            "required": "هذا الحقل مطلوب."
+        },
+        "requirements": {
+            "title": "متطلبات كلمة المرور:",
+            "minLength": "8 أحرف على الأقل",
+            "uppercase": "حرف كبير واحد على الأقل",
+            "lowercase": "حرف صغير واحد على الأقل",
+            "number": "رقم واحد على الأقل",
+            "special": "رمز خاص واحد على الأقل (!@#$%^&*)"
+        }
+    },
+    "hero": {
+        "title": "اعثر على منزل أحلامك",
+        "subtitle": "أذكى طريقة لشراء وتأجير وبيع العقارات.",
+        "searchPlaceholder": "أدخل عنوان أو حي أو مدينة أو رمز بريدي"
+    },
+    "home": {
+        "featuredProperties": "العقارات المميزة",
+        "featuredDescription": "استكشف مجموعتنا المختارة بعناية من العقارات المتميزة المتاحة للبيع والإيجار.",
+        "whyChooseUs": "لماذا تختار سمارت بروكر؟",
+        "viewAllProperties": "عرض جميع العقارات",
+        "tabs": {
+            "villas": "الفلل",
+            "apartments": "الشقق",
+            "all": "الكل"
+        },
+        "features": {
+            "verifiedListings": "قوائم موثقة",
+            "verifiedDescription": "يتم التحقق من كل عقار من قبل فريقنا لضمان الأصالة.",
+            "expertAgents": "وكلاء خبراء",
+            "expertDescription": "اعمل مع أفضل 1٪ من الوكلاء في منطقتك.",
+            "smartInsights": "رؤى ذكية",
+            "smartDescription": "احصل على رؤى مبنية على البيانات لاتخاذ أفضل قرار."
+        }
+    },
+    "footer": {
+        "company": "الشركة",
+        "aboutUs": "من نحن",
+        "careers": "الوظائف",
+        "blog": "المدونة",
+        "press": "الصحافة",
+        "support": "الدعم",
+        "helpCenter": "مركز المساعدة",
+        "termsOfService": "شروط الخدمة",
+        "privacyPolicy": "سياسة الخصوصية",
+        "contactUs": "اتصل بنا",
+        "contact": "التواصل",
+        "tagline": "شريكك الموثوق في العثور على العقار المثالي. نربط المشترين والبائعين والوكلاء بسلاسة.",
+        "copyright": "© 2025 سمارت بروكر. جميع الحقوق محفوظة. صُنع بـ ❤️ باستخدام React و Vite"
+    }
+}
