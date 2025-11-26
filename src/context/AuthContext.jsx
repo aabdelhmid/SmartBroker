@@ -35,13 +35,16 @@ export const AuthProvider = ({ children }) => {
 
                 setUser(profile);
 
-                // Fetch initial data
+                // Fetch user-specific data
                 await Promise.all([
-                    fetchProperties(),
                     fetchLeads(),
                     fetchInterests()
                 ]);
             }
+
+            // Always fetch properties (public access)
+            await fetchProperties();
+
         } catch (error) {
             console.error('Session check error:', error);
         } finally {
