@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LocalStorage to Supabase Migration</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #0B2E4F;
+        }
+        button {
+            background: #0B2E4F;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 5px;
+        }
+        button:hover {
+            background: #1a4d7a;
+        }
+        .output {
+            background: #f8f9fa;
+            border: 1px solid #ddd;
+            padding: 15px;
+            border-radius: 4px;
+            margin-top: 20px;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+        pre {
+            margin: 0;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .stat-card {
+            background: #f0f4f8;
+            padding: 15px;
+            border-radius: 4px;
+            text-align: center;
+        }
+        .stat-number {
+            font-size: 32px;
+            font-weight: bold;
+            color: #0B2E4F;
+        }
+        .stat-label {
+            color: #666;
+            margin-top: 5px;
+        }
+        .success {
+            color: #28a745;
+            font-weight: bold;
+        }
+        .error {
+            color: #dc3545;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📦 LocalStorage to Supabase Migration Tool</h1>
+        <p>This tool will extract your existing data from localStorage and generate SQL scripts to import it into Supabase.</p>
+        
+        <div class="stats" id="stats"></div>
+        
+        <div>
+            <button onclick="analyzeData()">1. Analyze LocalStorage Data</button>
+            <button onclick="generateSQL()">2. Generate SQL Scripts</button>
+            <button onclick="downloadSQL()">3. Download SQL File</button>
+            <button onclick="copyToClipboard()">4. Copy to Clipboard</button>
+        </div>
+        
+        <div class="output" id="output">
+            <p>Click "Analyze LocalStorage Data" to begin...</p>
+        </div>
+    </div>
+
+    <script>
+        let sqlScript = '';
+        let data = {
+            users: [],
+            properties: [],
+            leads: [],
+            interests: []
+        };
+
+        function analyzeData() {
+            const output = document.getElementById('output');
+            const stats = document.getElementById('stats');
+            
+            try {
+                // Extract data from localStorage
+                const mockUsers = JSON.parse(localStorage.getItem('mockUsers') || '[]');
+                const properties = JSON.parse(localStorage.getItem('properties') || '[]');
+                const leads = JSON.parse(localStorage.getItem('leads') || '[]');
+                const interests = JSON.parse(localStorage.getItem('interests') || '[]');
+                
+                data = { users: mockUsers, properties, leads, interests };
+                
+                // Display stats
+                stats.innerHTML = `
+                    <div class="stat-card">
+                        <div class="stat-number">${mockUsers.length}</div>
+                        <div class="stat-label">Users</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">${properties.length}</div>
+                        <div class="stat-label">Properties</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">${leads.length}</div>
+                        <div class="stat-label">Leads</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">${interests.length}</div>
+                        <div class="stat-label">Interests</div>
+                    </div>
+                `;
+                
+                output.innerHTML = `
+                    <p class="success">✅ Data extracted successfully!</p>
+                    <pre>${JSON.stringify({ 
+                        users: mockUsers.length, 
+                        properties: properties.length,
+                        leads: leads.length,
+                        interests: interests.length
+                    }, null, 2)}</pre>
+                    <p>Click "Generate SQL Scripts" to create migration SQL...</p>
+                `;
+            } catch (error) {
+                output.innerHTML = `<p class="error">❌ Error: ${error.message}</p>`;
+            }
+        }
+
+        function generateSQL() {
+            const output = document.getElementById('output');
+            
+            try {
+                let sql = '-- SmartBroker Data Migration Script\n';
+                sql += '-- Generated: ' + new Date().toISOString() + '\n\n';
+                
+                // Note about users
+                sql += '-- ============================================\n';
+                sql += '-- USERS MIGRATION\n';
+                sql += '-- ============================================\n';
+                sql += '-- NOTE: Users must be created via Supabase Auth first\n';
+                sql += '-- This script only shows the user data for reference\n';
+                sql += '-- You need to:\n';
+                sql += '-- 1. Create users via Supabase Dashboard (Authentication > Users)\n';
+                sql += '-- 2. Then update their profiles with the role\n\n';
+                
+                data.users.forEach(user => {
+                    sql += `-- User: ${user.email} (${user.role})\n`;
+                    sql += `-- After creating this user in Supabase Auth, run:\n`;
+                    sql += `-- UPDATE profiles SET role = '${user.role}', phone = '${user.phone || ''}', score = ${user.score || 50} WHERE email = '${user.email}';\n\n`;
+                });
+                
+                // Properties
+                sql += '\n-- ============================================\n';
+                sql += '-- PROPERTIES MIGRATION\n';
+                sql += '-- ============================================\n';
+                sql += '-- WARNING: You need to map agent_id to actual Supabase user IDs\n';
+                sql += '-- Replace the UUIDs below with real user IDs from your profiles table\n\n';
+                
+                if (data.properties.length > 0) {
+                    data.properties.forEach((prop, index) => {
+                        const images = Array.isArray(prop.images) ? prop.images : (prop.image ? [prop.image] : []);
+                        const features = Array.isArray(prop.features) ? prop.features : [];
+                        
+                        sql += `-- Property ${index + 1}: ${prop.address}\n`;
+                        sql += `INSERT INTO properties (address, price, beds, baths, sqft, type, status, description, features, images, area_id, discount_percentage, agent_id)\n`;
+                        sql += `VALUES (\n`;
+                        sql += `  '${(prop.address || '').replace(/'/g, "''")}',\n`;
+                        sql += `  ${prop.price || 0},\n`;
+                        sql += `  ${prop.beds || 0},\n`;
+                        sql += `  ${prop.baths || 0},\n`;
+                        sql += `  ${prop.sqft || 0},\n`;
+                        sql += `  '${prop.type || 'apartment'}',\n`;
+                        sql += `  '${prop.status || 'pending'}',\n`;
+                        sql += `  '${(prop.description || '').replace(/'/g, "''")}',\n`;
+                        sql += `  ARRAY[${features.map(f => `'${f.replace(/'/g, "''")}'`).join(', ')}],\n`;
+                        sql += `  ARRAY[${images.map(img => `'${img.replace(/'/g, "''")}'`).join(', ')}],\n`;
+                        sql += `  ${prop.areaId || 'NULL'},\n`;
+                        sql += `  ${prop.discount_percentage || 0},\n`;
+                        sql += `  (SELECT id FROM profiles WHERE email = '${prop.agentEmail || 'admin@smartbroker.com'}' LIMIT 1)\n`;
+                        sql += `);\n\n`;
+                    });
+                } else {
+                    sql += '-- No properties to migrate\n\n';
+                }
+                
+                // Interests
+                sql += '\n-- ============================================\n';
+                sql += '-- INTERESTS MIGRATION\n';
+                sql += '-- ============================================\n';
+                sql += '-- Run this AFTER properties are inserted\n\n';
+                
+                if (data.interests.length > 0) {
+                    data.interests.forEach((interest, index) => {
+                        sql += `-- Interest ${index + 1}\n`;
+                        sql += `INSERT INTO interests (property_id, buyer_id, message, status, created_at)\n`;
+                        sql += `VALUES (\n`;
+                        sql += `  ${interest.property_id},\n`;
+                        sql += `  (SELECT id FROM profiles WHERE email = '${interest.buyer_contact?.email || 'buyer@example.com'}' LIMIT 1),\n`;
+                        sql += `  '${(interest.message || '').replace(/'/g, "''")}',\n`;
+                        sql += `  '${interest.status || 'New'}',\n`;
+                        sql += `  '${interest.created_at || new Date().toISOString()}'\n`;
+                        sql += `);\n\n`;
+                    });
+                } else {
+                    sql += '-- No interests to migrate\n\n';
+                }
+                
+                // Leads
+                sql += '\n-- ============================================\n';
+                sql += '-- LEADS MIGRATION\n';
+                sql += '-- ============================================\n';
+                sql += '-- Run this AFTER interests are inserted\n\n';
+                
+                if (data.leads.length > 0) {
+                    data.leads.forEach((lead, index) => {
+                        sql += `-- Lead ${index + 1}\n`;
+                        sql += `INSERT INTO leads (property_id, buyer_id, marketer_id, status, created_at)\n`;
+                        sql += `VALUES (\n`;
+                        sql += `  ${lead.propertyId || lead.property_id},\n`;
+                        sql += `  (SELECT id FROM profiles WHERE email = 'buyer@example.com' LIMIT 1),\n`;
+                        sql += `  (SELECT id FROM profiles WHERE email = 'agent@example.com' LIMIT 1),\n`;
+                        sql += `  '${lead.status || 'New'}',\n`;
+                        sql += `  '${lead.timestamp || new Date().toISOString()}'\n`;
+                        sql += `);\n\n`;
+                    });
+                } else {
+                    sql += '-- No leads to migrate\n\n';
+                }
+                
+                sql += '\n-- Migration script complete!\n';
+                sql += '-- Remember to:\n';
+                sql += '-- 1. Create users in Supabase Auth first\n';
+                sql += '-- 2. Update the agent_id references with real UUIDs\n';
+                sql += '-- 3. Run this script in Supabase SQL Editor\n';
+                
+                sqlScript = sql;
+                
+                output.innerHTML = `
+                    <p class="success">✅ SQL script generated successfully!</p>
+                    <p>Total lines: ${sql.split('\n').length}</p>
+                    <pre>${sql}</pre>
+                `;
+            } catch (error) {
+                output.innerHTML = `<p class="error">❌ Error: ${error.message}</p>`;
+            }
+        }
+
+        function downloadSQL() {
+            if (!sqlScript) {
+                alert('Please generate SQL first!');
+                return;
+            }
+            
+            const blob = new Blob([sqlScript], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'migrate_data.sql';
+            a.click();
+            URL.revokeObjectURL(url);
+            
+            document.getElementById('output').innerHTML += '<p class="success">✅ SQL file downloaded!</p>';
+        }
+
+        function copyToClipboard() {
+            if (!sqlScript) {
+                alert('Please generate SQL first!');
+                return;
+            }
+            
+            navigator.clipboard.writeText(sqlScript).then(() => {
+                document.getElementById('output').innerHTML += '<p class="success">✅ SQL copied to clipboard!</p>';
+            }).catch(err => {
+                alert('Failed to copy: ' + err);
+            });
+        }
+    </script>
+</body>
+</html>

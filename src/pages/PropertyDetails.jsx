@@ -179,7 +179,7 @@ const PropertyDetails = () => {
                     <ImageCarousel images={property.images} />
                 ) : (
                     <img
-                        src={property.image || property.images?.[0] || 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80'}
+                        src={(property.images && property.images.length > 0 ? property.images[0] : property.image) || 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80'}
                         alt={property.address}
                         style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                     />

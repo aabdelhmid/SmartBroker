@@ -141,7 +141,7 @@ const SpecialOffers = () => {
                                             order: isArabic ? 2 : 1
                                         }}>
                                             <img
-                                                src={property.images?.[0] || property.image || 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=800&q=80'}
+                                                src={(property.images && property.images.length > 0 ? property.images[0] : property.image) || 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=800&q=80'}
                                                 alt={property.address}
                                                 style={{
                                                     width: '100%',

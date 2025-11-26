@@ -314,26 +314,7 @@ const AdminDashboard = () => {
                 </div>
             )}
 
-            {/* Debug Section */}
-            <div style={{ marginTop: '4rem', padding: '2rem', backgroundColor: '#F1F5F9', borderRadius: 'var(--radius-lg)' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-                    <div>
-                        <h3 style={{ margin: 0, color: 'var(--text-muted)' }}>Debug Tools</h3>
-                        <p style={{ margin: '0.5rem 0 0 0', fontSize: '0.875rem', color: 'var(--text-muted)' }}>
-                            Storage Used: {Math.round(JSON.stringify(localStorage).length / 1024)} KB / ~5000 KB
-                        </p>
-                        <p style={{ margin: '0.25rem 0 0 0', fontSize: '0.875rem', color: 'var(--text-muted)' }}>
-                            Last Sync: {new Date().toLocaleTimeString()}
-                        </p>
-                    </div>
-                    <div style={{ display: 'flex', gap: '1rem' }}>
-                        <button onClick={() => window.location.reload()} className="btn btn-outline">Force Refresh</button>
-                        <button onClick={() => { generateTestData(); alert("Test data generated!"); }} className="btn btn-primary">Generate Test Data</button>
-                        <button onClick={() => { if (window.confirm('Reset ALL data?')) { localStorage.clear(); window.location.reload(); } }} className="btn btn-outline" style={{ borderColor: '#EF4444', color: '#EF4444' }}>Reset All Data</button>
-                    </div>
-                </div>
-            </div>
-            )}
+
 
             {/* Interests Tab */}
             {activeTab === 'interests' && (

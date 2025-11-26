@@ -7,9 +7,12 @@ import { useTranslation } from 'react-i18next';
 const PropertyCard = ({ property }) => {
     const { t, i18n } = useTranslation();
     const isArabic = i18n.language === 'ar';
-    const { id, image, price, address, beds, baths, sqft, discount_percentage } = property;
+    const { id, images, image, price, address, beds, baths, sqft, discount_percentage } = property;
     const score = calculateScore(price, sqft, beds, baths);
     const scoreColor = getScoreColor(score);
+
+    // Use first image from array, or single image, or placeholder
+    const displayImage = (images && images.length > 0) ? images[0] : (image || 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80');
 
     return (
         <Link to={`/property/${id}`} style={{ display: 'block', textDecoration: 'none', color: 'inherit' }}>
@@ -55,7 +58,7 @@ const PropertyCard = ({ property }) => {
                 </div>
                 <div style={{ height: '200px', overflow: 'hidden' }}>
                     <img
-                        src={image}
+                        src={displayImage}
                         alt={address}
                         style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                     />
