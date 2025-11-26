@@ -741,13 +741,37 @@ export const AuthProvider = ({ children }) => {
             }));
     };
 
-    const searchGlobal = async (query, filters = {}) => {
-        // This would need to be implemented with Supabase full-text search
-        // For now, return empty results
+    const searchGlobal = (query, filters = {}) => {
+        if (!query) return { properties: [], agents: [], locations: [] };
+
+        const lowerQuery = query.toLowerCase();
+
+        // Filter properties
+        const filteredProperties = properties.filter(p =>
+            p.address.toLowerCase().includes(lowerQuery) ||
+            p.description?.toLowerCase().includes(lowerQuery) ||
+            p.type?.toLowerCase().includes(lowerQuery) ||
+            p.areaName?.toLowerCase().includes(lowerQuery) ||
+            p.areaNameAr?.toLowerCase().includes(lowerQuery)
+        );
+
+        // Filter agents (mockUsers)
+        const filteredAgents = mockUsers.filter(u =>
+            u.role === 'marketer' && (
+                u.name.toLowerCase().includes(lowerQuery) ||
+                u.email.toLowerCase().includes(lowerQuery)
+            )
+        );
+
+        // Filter locations (areas)
+        // We need to import areas or fetch them. Since we don't have areas in state, we'll skip for now or use properties to find unique areas.
+        // Actually, let's just return empty locations for now to be safe, or filter properties' area names.
+        const uniqueAreas = [...new Set(filteredProperties.map(p => p.areaName).filter(Boolean))].map(name => ({ name }));
+
         return {
-            properties: [],
-            agents: [],
-            locations: []
+            properties: filteredProperties,
+            agents: filteredAgents,
+            locations: uniqueAreas
         };
     };
 
