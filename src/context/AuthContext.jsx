@@ -8,6 +8,7 @@ export const AuthProvider = ({ children }) => {
     const [properties, setProperties] = useState([]);
     const [leads, setLeads] = useState([]);
     const [interests, setInterests] = useState([]);
+    const [areas, setAreas] = useState([]);
     const [loading, setLoading] = useState(true);
 
     // Commission settings
@@ -42,8 +43,11 @@ export const AuthProvider = ({ children }) => {
                 ]);
             }
 
-            // Always fetch properties (public access)
-            await fetchProperties();
+            // Always fetch properties and areas (public access)
+            await Promise.all([
+                fetchProperties(),
+                fetchAreas()
+            ]);
 
         } catch (error) {
             console.error('Session check error:', error);
@@ -214,6 +218,21 @@ export const AuthProvider = ({ children }) => {
             setProperties(transformedData);
         } catch (error) {
             console.error('Error fetching properties:', error);
+        }
+    };
+
+    const fetchAreas = async () => {
+        try {
+            const { data, error } = await supabase
+                .from('areas')
+                .select('*')
+                .order('name', { ascending: true });
+
+            if (error) throw error;
+
+            setAreas(data || []);
+        } catch (error) {
+            console.error('Error fetching areas:', error);
         }
     };
 
@@ -961,7 +980,8 @@ export const AuthProvider = ({ children }) => {
             rejectCommission,
             getCommissionClaims,
             commissionSettings,
-            updateProfile
+            updateProfile,
+            areas
         }}>
             {children}
         </AuthContext.Provider>

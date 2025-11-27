@@ -3,7 +3,7 @@ import { useAuth } from '../context/AuthContext';
 import { Navigate, Link } from 'react-router-dom';
 
 const Profile = () => {
-    const { user, updateProfile, properties } = useAuth();
+    const { user, updateProfile, areas } = useAuth();
     const [isEditing, setIsEditing] = useState(false);
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState(null);
@@ -18,8 +18,6 @@ const Profile = () => {
         buying_intent: 'cash'
     });
 
-    // Derive available locations from properties
-    const availableLocations = [...new Set(properties.map(p => p.areaSlug).filter(Boolean))];
     const propertyTypes = ['apartment', 'villa', 'office', 'land', 'commercial'];
 
     useEffect(() => {
@@ -186,6 +184,7 @@ const Profile = () => {
                                                 value={formData.budget_min}
                                                 onChange={handleChange}
                                                 className="input"
+                                                placeholder="e.g. 1,000,000"
                                             />
                                         </div>
                                         <div>
@@ -196,7 +195,9 @@ const Profile = () => {
                                                 value={formData.budget_max}
                                                 onChange={handleChange}
                                                 className="input"
+                                                placeholder="e.g. 50,000,000+"
                                             />
+                                            <small style={{ color: 'var(--text-muted)' }}>Up to 50M+ supported</small>
                                         </div>
                                     </div>
 
@@ -236,18 +237,27 @@ const Profile = () => {
                                     {/* Locations */}
                                     <div>
                                         <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 500 }}>Preferred Locations</label>
-                                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem' }}>
-                                            {availableLocations.length > 0 ? availableLocations.map(loc => (
-                                                <label key={loc} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer' }}>
+                                        <div style={{
+                                            display: 'flex',
+                                            flexWrap: 'wrap',
+                                            gap: '1rem',
+                                            maxHeight: '200px',
+                                            overflowY: 'auto',
+                                            padding: '0.5rem',
+                                            border: '1px solid var(--border)',
+                                            borderRadius: 'var(--radius-md)'
+                                        }}>
+                                            {areas.length > 0 ? areas.map(area => (
+                                                <label key={area.id} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', minWidth: '150px' }}>
                                                     <input
                                                         type="checkbox"
-                                                        value={loc}
-                                                        checked={formData.preferred_locations.includes(loc)}
+                                                        value={area.slug}
+                                                        checked={formData.preferred_locations.includes(area.slug)}
                                                         onChange={(e) => handleArrayChange(e, 'preferred_locations')}
                                                     />
-                                                    {loc}
+                                                    {area.name}
                                                 </label>
-                                            )) : <p style={{ color: 'var(--text-muted)' }}>No locations available yet.</p>}
+                                            )) : <p style={{ color: 'var(--text-muted)' }}>Loading locations...</p>}
                                         </div>
                                     </div>
                                 </>
