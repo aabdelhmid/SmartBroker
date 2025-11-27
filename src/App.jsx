@@ -24,6 +24,7 @@ import AddProperty from './pages/AddProperty';
 import SearchResults from './pages/SearchResults';
 import Areas from './pages/Areas';
 import Properties from './pages/Properties';
+import MarketerDashboard from './pages/MarketerDashboard';
 
 
 
@@ -297,6 +298,7 @@ function App() {
               <Route path="/search" element={<SearchResults />} />
               <Route path="/areas" element={<Areas />} />
               <Route path="/properties" element={<Properties />} />
+              <Route path="/marketer-dashboard" element={<MarketerDashboard />} />
             </Routes>
           </main>
           <Footer />

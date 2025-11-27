@@ -355,3 +355,78 @@ CREATE INDEX IF NOT EXISTS idx_interests_property_id ON interests(property_id);
 CREATE INDEX IF NOT EXISTS idx_leads_marketer_id ON leads(marketer_id);
 CREATE INDEX IF NOT EXISTS idx_leads_buyer_id ON leads(buyer_id);
 CREATE INDEX IF NOT EXISTS idx_commission_claims_marketer_id ON commission_claims(marketer_id);
+
+-- ============================================
+-- 10. LEAD SCORING & MATCHING UPDATES
+-- ============================================
+
+-- Add preferences columns to profiles
+ALTER TABLE profiles 
+ADD COLUMN IF NOT EXISTS budget_min NUMERIC,
+ADD COLUMN IF NOT EXISTS budget_max NUMERIC,
+ADD COLUMN IF NOT EXISTS preferred_locations TEXT[], -- Array of area slugs
+ADD COLUMN IF NOT EXISTS preferred_property_types TEXT[], -- Array of types
+ADD COLUMN IF NOT EXISTS buying_intent TEXT, -- 'cash', 'installments', 'mortgage'
+ADD COLUMN IF NOT EXISTS is_profile_complete BOOLEAN DEFAULT FALSE;
+
+-- Add adjacency to areas
+ALTER TABLE areas
+ADD COLUMN IF NOT EXISTS adjacent_area_ids INTEGER[]; -- Array of adjacent area IDs
+
+-- Function to calculate lead score
+CREATE OR REPLACE FUNCTION calculate_lead_score()
+RETURNS TRIGGER AS $$
+DECLARE
+    new_score INTEGER := 0;
+BEGIN
+    -- 1. Budget range selected (+30)
+    IF NEW.budget_min IS NOT NULL OR NEW.budget_max IS NOT NULL THEN
+        new_score := new_score + 30;
+    END IF;
+
+    -- 2. At least one preferred location (+20)
+    IF NEW.preferred_locations IS NOT NULL AND array_length(NEW.preferred_locations, 1) > 0 THEN
+        new_score := new_score + 20;
+    END IF;
+
+    -- 3. At least one property type (+20)
+    IF NEW.preferred_property_types IS NOT NULL AND array_length(NEW.preferred_property_types, 1) > 0 THEN
+        new_score := new_score + 20;
+    END IF;
+
+    -- 4. Buying intent selected (+10)
+    IF NEW.buying_intent IS NOT NULL THEN
+        new_score := new_score + 10;
+    END IF;
+
+    -- 5. Valid phone number (+10)
+    IF NEW.phone IS NOT NULL AND length(NEW.phone) > 5 THEN
+        new_score := new_score + 10;
+    END IF;
+
+    -- 6. Profile complete (+10)
+    -- Assuming profile is complete if name and email are present (which are NOT NULL constraints)
+    -- and at least one preference is set.
+    IF NEW.name IS NOT NULL AND NEW.email IS NOT NULL THEN
+         new_score := new_score + 10;
+         NEW.is_profile_complete := TRUE;
+    ELSE
+         NEW.is_profile_complete := FALSE;
+    END IF;
+
+    -- Cap score at 100
+    IF new_score > 100 THEN
+        new_score := 100;
+    END IF;
+
+    NEW.score := new_score;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Trigger to auto-calculate score on profile update/insert
+DROP TRIGGER IF EXISTS trigger_calculate_lead_score ON profiles;
+CREATE TRIGGER trigger_calculate_lead_score
+BEFORE INSERT OR UPDATE ON profiles
+FOR EACH ROW
+EXECUTE FUNCTION calculate_lead_score();

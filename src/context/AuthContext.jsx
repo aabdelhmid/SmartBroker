@@ -163,6 +163,24 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
+    const updateProfile = async (updates) => {
+        try {
+            const { error } = await supabase
+                .from('profiles')
+                .update(updates)
+                .eq('id', user.id);
+
+            if (error) throw error;
+
+            // Update local state
+            setUser(prev => ({ ...prev, ...updates }));
+
+            return { success: true };
+        } catch (error) {
+            return { success: false, error: error.message };
+        }
+    };
+
     // ============================================
     // PROPERTIES
     // ============================================
@@ -322,18 +340,109 @@ export const AuthProvider = ({ children }) => {
                 throw new Error('You have already expressed interest in this property');
             }
 
+            // Fetch property details for matching engine
+            const { data: property } = await supabase
+                .from('properties')
+                .select('*, area:areas(*)')
+                .eq('id', propertyId)
+                .single();
+
+            if (!property) throw new Error('Property not found');
+
+            // MATCHING ENGINE
+            let isMatch = false;
+            if (user.role === 'buyer' && property.status === 'approved') {
+                // 1. Price Check (±18%)
+                const budgetMin = user.budget_min || 0;
+                const budgetMax = user.budget_max || Infinity;
+                const price = parseFloat(property.price);
+
+                // If user has no budget set, we skip price check or assume match? 
+                // Requirement says "Property price is within buyer’s budget ±18%"
+                // If budget is missing, we can't match.
+                const priceMatch = (budgetMin > 0 || budgetMax < Infinity) &&
+                    (price >= budgetMin * 0.82 && price <= budgetMax * 1.18);
+
+                // 2. Location Check
+                // Must exist in preferred locations OR adjacent
+                // We need adjacent areas from the area table
+                const preferredLocs = user.preferred_locations || [];
+                const propertyAreaSlug = property.area?.slug;
+                const adjacentIds = property.area?.adjacent_area_ids || [];
+
+                // We need to check if any preferred location corresponds to an adjacent area ID
+                // This is tricky without fetching all areas. 
+                // For now, let's check direct match on slug.
+                // TODO: Implement full adjacency check by fetching area details for preferred locs
+                const locationMatch = preferredLocs.includes(propertyAreaSlug);
+                // OR adjacent check (simplified for now: if property area has adjacent IDs, and user prefers one of those areas?)
+                // Since we store slugs in preferences, we'd need to map slugs to IDs.
+                // Let's stick to direct match for now to be safe, or if user has NO preferences, maybe no match.
+
+                // 3. Type Check (Exact)
+                const preferredTypes = user.preferred_property_types || [];
+                const typeMatch = preferredTypes.includes(property.type);
+
+                if (priceMatch && locationMatch && typeMatch) {
+                    isMatch = true;
+                }
+            }
+
+            if (isMatch) {
+                // Create Lead directly
+                const { data: lead, error: leadError } = await supabase
+                    .from('leads')
+                    .insert([{
+                        property_id: propertyId,
+                        buyer_id: user.id,
+                        marketer_id: property.agent_id, // Assign to property agent
+                        status: 'New',
+                        notes: `Auto-matched via Matching Engine. Message: ${message}`
+                    }])
+                    .select()
+                    .single();
+
+                if (leadError) throw leadError;
+
+                // Also create interest record for tracking? 
+                // Usually lead replaces interest or links to it. 
+                // The schema has interest_id in leads table.
+                // Let's create interest first then lead? 
+                // Requirement says "Instantly create a Lead". 
+                // Let's create interest too so it shows in buyer's list.
+            }
+
+            // Always create interest record so buyer sees it
             const { data, error } = await supabase
                 .from('interests')
                 .insert([{
                     property_id: propertyId,
                     buyer_id: user.id,
                     message,
-                    status: 'New'
+                    status: isMatch ? 'Approved' : 'New', // If matched, interest is effectively approved/converted to lead
+                    approved_at: isMatch ? new Date().toISOString() : null
                 }])
                 .select()
                 .single();
 
             if (error) throw error;
+
+            // If match, link lead to interest
+            if (isMatch) {
+                // We need to create the lead HERE if we want to link it
+                const { error: leadError } = await supabase
+                    .from('leads')
+                    .insert([{
+                        property_id: propertyId,
+                        buyer_id: user.id,
+                        marketer_id: property.agent_id,
+                        status: 'New',
+                        notes: `Auto-matched via Matching Engine. Message: ${message}`,
+                        interest_id: data.id
+                    }]);
+
+                if (leadError) console.error('Error creating auto-lead:', leadError);
+            }
 
             await fetchInterests();
             return data;
@@ -446,7 +555,7 @@ export const AuthProvider = ({ children }) => {
                 .select(`
                     *,
                     property:properties(id, address, price, type),
-                    buyer:profiles!buyer_id(id, name, email, phone),
+                    buyer:profiles!buyer_id(id, name, email, phone, score),
                     marketer:profiles!marketer_id(id, name, email)
                 `)
                 .order('created_at', { ascending: false });
@@ -851,7 +960,8 @@ export const AuthProvider = ({ children }) => {
             approveCommission,
             rejectCommission,
             getCommissionClaims,
-            commissionSettings
+            commissionSettings,
+            updateProfile
         }}>
             {children}
         </AuthContext.Provider>

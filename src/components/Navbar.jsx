@@ -274,6 +274,27 @@ const Navbar = () => {
                   >
                     {t('navbar.dashboard')}
                   </Link>
+                  {(user.role === 'marketer' || user.role === 'developer' || user.role === 'admin') && (
+                    <Link
+                      to="/marketer-dashboard"
+                      role="menuitem"
+                      onClick={() => setIsUserDropdownOpen(false)}
+                      style={{
+                        display: 'block',
+                        padding: '0.75rem 1rem',
+                        color: 'var(--text-main)',
+                        textDecoration: 'none',
+                        transition: 'background-color 0.2s',
+                        minHeight: '44px',
+                        display: 'flex',
+                        alignItems: 'center'
+                      }}
+                      onMouseEnter={(e) => e.target.style.backgroundColor = '#f8f9fa'}
+                      onMouseLeave={(e) => e.target.style.backgroundColor = 'white'}
+                    >
+                      Marketer Dashboard
+                    </Link>
+                  )}
                   <Link
                     to="/profile"
                     role="menuitem"
@@ -433,6 +454,11 @@ const Navbar = () => {
                   <Link to="/dashboard" style={{ padding: '0.75rem', color: 'var(--text-main)', textDecoration: 'none', borderRadius: 'var(--radius-sm)', minHeight: '44px', display: 'flex', alignItems: 'center' }}>
                     {t('navbar.dashboard')}
                   </Link>
+                  {(user.role === 'marketer' || user.role === 'developer' || user.role === 'admin') && (
+                    <Link to="/marketer-dashboard" style={{ padding: '0.75rem', color: 'var(--text-main)', textDecoration: 'none', borderRadius: 'var(--radius-sm)', minHeight: '44px', display: 'flex', alignItems: 'center' }}>
+                      Marketer Dashboard
+                    </Link>
+                  )}
                   <Link to="/profile" style={{ padding: '0.75rem', color: 'var(--text-main)', textDecoration: 'none', borderRadius: 'var(--radius-sm)', minHeight: '44px', display: 'flex', alignItems: 'center' }}>
                     {t('navbar.profile')}
                   </Link>
