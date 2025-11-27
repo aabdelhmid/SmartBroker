@@ -101,15 +101,6 @@ export const AuthProvider = ({ children }) => {
 
             if (authError) throw authError;
 
-            // Calculate score for buyers
-            let buyerScore = 50;
-            if (userData.role === 'buyer') {
-                if (userData.budget === '1m+') buyerScore += 30;
-                else if (userData.budget === '500k-1m') buyerScore += 20;
-                else if (userData.budget === '0-500k') buyerScore += 10;
-                if (userData.preferredLocation?.length > 0) buyerScore += 10;
-            }
-
             // Create profile
             const { error: profileError } = await supabase
                 .from('profiles')
@@ -119,7 +110,17 @@ export const AuthProvider = ({ children }) => {
                     name: userData.name,
                     role: userData.role,
                     phone: userData.phone,
-                    score: buyerScore,
+                    // Buyer specific
+                    budget_min: userData.budget_min,
+                    budget_max: userData.budget_max,
+                    preferred_locations: userData.preferred_locations,
+                    preferred_property_types: userData.preferred_property_types,
+                    buying_intent: userData.buying_intent,
+                    // Marketer specific
+                    company: userData.company,
+                    marketer_role: userData.marketerRole,
+                    office_location: userData.officeLocation,
+                    cr_number: userData.crNumber,
                     status: 'active'
                 }]);
 
