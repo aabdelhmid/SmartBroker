@@ -430,3 +430,10 @@ CREATE TRIGGER trigger_calculate_lead_score
 BEFORE INSERT OR UPDATE ON profiles
 FOR EACH ROW
 EXECUTE FUNCTION calculate_lead_score();
+
+-- ============================================
+-- 11. ONBOARDING TRACKING
+-- ============================================
+
+-- Add onboarding completion tracking
+ALTER TABLE profiles ADD COLUMN IF NOT EXISTS onboarding_completed BOOLEAN DEFAULT FALSE;

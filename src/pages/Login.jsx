@@ -1,22 +1,38 @@
 import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
+    const [loading, setLoading] = useState(false);
     const { login } = useAuth();
     const navigate = useNavigate();
+    const location = useLocation();
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
-        if (login(email, password)) {
-            navigate('/');
+        setLoading(true);
+
+        const result = await login(email, password);
+
+        if (result.success) {
+            // Check if we should redirect to onboarding
+            const params = new URLSearchParams(location.search);
+            const shouldRedirectToOnboarding = params.get('redirect') === 'onboarding';
+
+            if (shouldRedirectToOnboarding) {
+                navigate('/onboarding');
+            } else {
+                navigate('/');
+            }
         } else {
-            setError('Invalid email or password. Please register if you haven\'t already.');
+            setError(result.error || 'Invalid email or password. Please register if you haven\'t already.');
         }
+
+        setLoading(false);
     };
 
     return (
@@ -34,7 +50,8 @@ const Login = () => {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
-                    style={{ padding: '0.75rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border)' }}
+                    className="input"
+                    style={{ width: '100%' }}
                 />
                 <input
                     type="password"
@@ -42,9 +59,12 @@ const Login = () => {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
-                    style={{ padding: '0.75rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border)' }}
+                    className="input"
+                    style={{ width: '100%' }}
                 />
-                <button type="submit" className="btn btn-primary">Log In</button>
+                <button type="submit" className="btn btn-primary" disabled={loading}>
+                    {loading ? 'Logging in...' : 'Log In'}
+                </button>
             </form>
             <p style={{ marginTop: '1rem', textAlign: 'center', color: 'var(--text-muted)' }}>
                 Don't have an account? <Link to="/signup" style={{ color: 'var(--primary)' }}>Sign Up</Link>

@@ -16,7 +16,7 @@ const Signup = () => {
         else if (newRole === 'buyer') setRole('buyer');
     }, [location.search]);
 
-    const { signup, areas } = useAuth();
+    const { signup } = useAuth();
     const navigate = useNavigate();
 
     const [formData, setFormData] = useState({
@@ -25,12 +25,6 @@ const Signup = () => {
         phone: '',
         password: '',
         confirmPassword: '',
-        // Buyer specific
-        budget_min: '',
-        budget_max: '',
-        preferred_locations: [],
-        preferred_property_types: [],
-        buying_intent: 'cash',
         // Marketer specific
         company: '',
         marketerRole: 'Marketer', // Marketer or Developer
@@ -41,22 +35,8 @@ const Signup = () => {
     const [success, setSuccess] = useState(false);
     const [loading, setLoading] = useState(false);
 
-    const propertyTypes = ['apartment', 'villa', 'office', 'land', 'commercial'];
-
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
-    };
-
-    const handleArrayChange = (e, field) => {
-        const { value, checked } = e.target;
-        setFormData(prev => {
-            const current = prev[field] || [];
-            if (checked) {
-                return { ...prev, [field]: [...current, value] };
-            } else {
-                return { ...prev, [field]: current.filter(item => item !== value) };
-            }
-        });
     };
 
     const handleSubmit = async (e) => {
@@ -79,13 +59,7 @@ const Signup = () => {
             role: role
         };
 
-        if (role === 'buyer') {
-            userData.budget_min = formData.budget_min ? parseFloat(formData.budget_min) : null;
-            userData.budget_max = formData.budget_max ? parseFloat(formData.budget_max) : null;
-            userData.preferred_locations = formData.preferred_locations;
-            userData.preferred_property_types = formData.preferred_property_types;
-            userData.buying_intent = formData.buying_intent;
-        } else {
+        if (role === 'marketer') {
             userData.company = formData.company;
             userData.marketerRole = formData.marketerRole;
             userData.officeLocation = formData.officeLocation;
@@ -95,6 +69,12 @@ const Signup = () => {
         const result = await signup(userData);
         if (result.success) {
             setSuccess(true);
+            // Redirect buyers to onboarding, marketers to login
+            if (role === 'buyer') {
+                setTimeout(() => navigate('/login?redirect=onboarding'), 1500);
+            } else {
+                setTimeout(() => navigate('/login'), 1500);
+            }
         } else {
             setError(result.error);
         }
@@ -106,17 +86,19 @@ const Signup = () => {
             <div className="container" style={{ maxWidth: '500px', marginTop: '4rem', marginBottom: '4rem', textAlign: 'center' }}>
                 <div style={{ backgroundColor: '#ECFDF5', color: '#065F46', padding: '2rem', borderRadius: 'var(--radius-lg)', marginBottom: '2rem' }}>
                     <h2 style={{ marginBottom: '1rem' }}>Registration Successful! 🎉</h2>
-                    <p style={{ marginBottom: '1.5rem' }}>Your account has been created successfully.</p>
-                    <Link to="/login">
-                        <button className="btn btn-primary">Go to Login</button>
-                    </Link>
+                    <p style={{ marginBottom: '1.5rem' }}>
+                        {role === 'buyer'
+                            ? 'Your account has been created. Redirecting to login...'
+                            : 'Your account has been created successfully. Redirecting to login...'}
+                    </p>
+                    <div style={{ fontSize: '2rem' }}>⏳</div>
                 </div>
             </div>
         );
     }
 
     return (
-        <div className="container" style={{ maxWidth: '600px', marginTop: '4rem', marginBottom: '4rem' }}>
+        <div className="container" style={{ maxWidth: '500px', marginTop: '4rem', marginBottom: '4rem' }}>
             <h2 style={{ marginBottom: '1.5rem', textAlign: 'center' }}>Create Account</h2>
 
             {/* Role Switcher */}
@@ -174,31 +156,17 @@ const Signup = () => {
 
             <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                 {/* Common Fields */}
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-                    <div>
-                        <label style={{ display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500 }}>Full Name</label>
-                        <input
-                            type="text"
-                            name="name"
-                            value={formData.name}
-                            onChange={handleChange}
-                            required
-                            className="input"
-                            style={{ width: '100%' }}
-                        />
-                    </div>
-                    <div>
-                        <label style={{ display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500 }}>Phone</label>
-                        <input
-                            type="tel"
-                            name="phone"
-                            value={formData.phone}
-                            onChange={handleChange}
-                            required
-                            className="input"
-                            style={{ width: '100%' }}
-                        />
-                    </div>
+                <div>
+                    <label style={{ display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500 }}>Full Name</label>
+                    <input
+                        type="text"
+                        name="name"
+                        value={formData.name}
+                        onChange={handleChange}
+                        required
+                        className="input"
+                        style={{ width: '100%' }}
+                    />
                 </div>
 
                 <div>
@@ -214,128 +182,44 @@ const Signup = () => {
                     />
                 </div>
 
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-                    <div>
-                        <label style={{ display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500 }}>Password</label>
-                        <input
-                            type="password"
-                            name="password"
-                            value={formData.password}
-                            onChange={handleChange}
-                            required
-                            className="input"
-                            style={{ width: '100%' }}
-                        />
-                    </div>
-                    <div>
-                        <label style={{ display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500 }}>Confirm Password</label>
-                        <input
-                            type="password"
-                            name="confirmPassword"
-                            value={formData.confirmPassword}
-                            onChange={handleChange}
-                            required
-                            className="input"
-                            style={{ width: '100%' }}
-                        />
-                    </div>
+                <div>
+                    <label style={{ display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500 }}>Phone</label>
+                    <input
+                        type="tel"
+                        name="phone"
+                        value={formData.phone}
+                        onChange={handleChange}
+                        required
+                        className="input"
+                        style={{ width: '100%' }}
+                    />
                 </div>
 
-                {/* Buyer Specific Fields */}
-                {role === 'buyer' && (
-                    <>
-                        <h4 style={{ margin: '1rem 0 0.5rem', borderBottom: '1px solid var(--border)', paddingBottom: '0.5rem' }}>Preferences (Optional)</h4>
+                <div>
+                    <label style={{ display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500 }}>Password</label>
+                    <input
+                        type="password"
+                        name="password"
+                        value={formData.password}
+                        onChange={handleChange}
+                        required
+                        className="input"
+                        style={{ width: '100%' }}
+                    />
+                </div>
 
-                        {/* Budget */}
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-                            <div>
-                                <label style={{ display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500 }}>Min Budget (EGP)</label>
-                                <input
-                                    type="number"
-                                    name="budget_min"
-                                    value={formData.budget_min}
-                                    onChange={handleChange}
-                                    className="input"
-                                    placeholder="e.g. 1,000,000"
-                                    style={{ width: '100%' }}
-                                />
-                            </div>
-                            <div>
-                                <label style={{ display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500 }}>Max Budget (EGP)</label>
-                                <input
-                                    type="number"
-                                    name="budget_max"
-                                    value={formData.budget_max}
-                                    onChange={handleChange}
-                                    className="input"
-                                    placeholder="e.g. 50,000,000+"
-                                    style={{ width: '100%' }}
-                                />
-                            </div>
-                        </div>
-
-                        {/* Buying Intent */}
-                        <div>
-                            <label style={{ display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500 }}>Buying Intent</label>
-                            <select
-                                name="buying_intent"
-                                value={formData.buying_intent}
-                                onChange={handleChange}
-                                className="input"
-                                style={{ width: '100%' }}
-                            >
-                                <option value="cash">Cash</option>
-                                <option value="installments">Installments</option>
-                                <option value="mortgage">Mortgage</option>
-                            </select>
-                        </div>
-
-                        {/* Property Types */}
-                        <div>
-                            <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.875rem', fontWeight: 500 }}>Preferred Property Types</label>
-                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem' }}>
-                                {propertyTypes.map(type => (
-                                    <label key={type} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', fontSize: '0.875rem' }}>
-                                        <input
-                                            type="checkbox"
-                                            value={type}
-                                            checked={formData.preferred_property_types.includes(type)}
-                                            onChange={(e) => handleArrayChange(e, 'preferred_property_types')}
-                                        />
-                                        {type.charAt(0).toUpperCase() + type.slice(1)}
-                                    </label>
-                                ))}
-                            </div>
-                        </div>
-
-                        {/* Locations */}
-                        <div>
-                            <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.875rem', fontWeight: 500 }}>Preferred Locations</label>
-                            <div style={{
-                                display: 'flex',
-                                flexWrap: 'wrap',
-                                gap: '1rem',
-                                maxHeight: '150px',
-                                overflowY: 'auto',
-                                padding: '0.5rem',
-                                border: '1px solid var(--border)',
-                                borderRadius: 'var(--radius-md)'
-                            }}>
-                                {areas && areas.length > 0 ? areas.map(area => (
-                                    <label key={area.id} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', minWidth: '140px', fontSize: '0.875rem' }}>
-                                        <input
-                                            type="checkbox"
-                                            value={area.slug}
-                                            checked={formData.preferred_locations.includes(area.slug)}
-                                            onChange={(e) => handleArrayChange(e, 'preferred_locations')}
-                                        />
-                                        {area.name}
-                                    </label>
-                                )) : <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem' }}>Loading locations...</p>}
-                            </div>
-                        </div>
-                    </>
-                )}
+                <div>
+                    <label style={{ display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500 }}>Confirm Password</label>
+                    <input
+                        type="password"
+                        name="confirmPassword"
+                        value={formData.confirmPassword}
+                        onChange={handleChange}
+                        required
+                        className="input"
+                        style={{ width: '100%' }}
+                    />
+                </div>
 
                 {/* Marketer Specific Fields */}
                 {role === 'marketer' && (
@@ -386,6 +270,18 @@ const Signup = () => {
                             />
                         </div>
                     </>
+                )}
+
+                {role === 'buyer' && (
+                    <div style={{
+                        padding: '1rem',
+                        backgroundColor: '#EEF2FF',
+                        borderRadius: 'var(--radius-md)',
+                        fontSize: '0.875rem',
+                        color: 'var(--text-muted)'
+                    }}>
+                        💡 After signup, we'll help you set your preferences in a quick 4-step wizard
+                    </div>
                 )}
 
                 <button type="submit" className="btn btn-primary" style={{ marginTop: '1rem' }} disabled={loading}>

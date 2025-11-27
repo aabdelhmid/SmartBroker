@@ -186,6 +186,34 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
+    const completeOnboarding = async (preferences) => {
+        try {
+            const updates = {
+                budget_min: preferences.budgetMin ? parseFloat(preferences.budgetMin) : null,
+                budget_max: preferences.budgetMax ? parseFloat(preferences.budgetMax) : null,
+                preferred_locations: preferences.preferredLocations,
+                preferred_property_types: preferences.propertyTypes,
+                buying_intent: preferences.paymentPreference,
+                is_profile_complete: true,
+                onboarding_completed: true
+            };
+
+            const { error } = await supabase
+                .from('profiles')
+                .update(updates)
+                .eq('id', user.id);
+
+            if (error) throw error;
+
+            // Update local state
+            setUser(prev => ({ ...prev, ...updates }));
+
+            return { success: true };
+        } catch (error) {
+            return { success: false, error: error.message };
+        }
+    };
+
     // ============================================
     // PROPERTIES
     // ============================================
@@ -982,6 +1010,7 @@ export const AuthProvider = ({ children }) => {
             getCommissionClaims,
             commissionSettings,
             updateProfile,
+            completeOnboarding,
             areas
         }}>
             {children}

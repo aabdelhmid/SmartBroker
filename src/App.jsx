@@ -25,6 +25,7 @@ import SearchResults from './pages/SearchResults';
 import Areas from './pages/Areas';
 import Properties from './pages/Properties';
 import MarketerDashboard from './pages/MarketerDashboard';
+import Onboarding from './pages/Onboarding';
 
 
 
@@ -299,6 +300,7 @@ function App() {
               <Route path="/areas" element={<Areas />} />
               <Route path="/properties" element={<Properties />} />
               <Route path="/marketer-dashboard" element={<MarketerDashboard />} />
+              <Route path="/onboarding" element={<Onboarding />} />
             </Routes>
           </main>
           <Footer />
