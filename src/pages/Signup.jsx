@@ -68,12 +68,11 @@ const Signup = () => {
 
         const result = await signup(userData);
         if (result.success) {
-            setSuccess(true);
-            // Redirect buyers to onboarding, marketers to login
-            if (role === 'buyer') {
-                setTimeout(() => navigate('/login?redirect=onboarding'), 1500);
+            // Redirect buyers to onboarding, others to dashboard
+            if (result.shouldRedirectToOnboarding) {
+                navigate('/onboarding');
             } else {
-                setTimeout(() => navigate('/login'), 1500);
+                setSuccess(true);
             }
         } else {
             setError(result.error);

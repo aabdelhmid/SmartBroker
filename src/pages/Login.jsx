@@ -19,11 +19,8 @@ const Login = () => {
         const result = await login(email, password);
 
         if (result.success) {
-            // Check if we should redirect to onboarding
-            const params = new URLSearchParams(location.search);
-            const shouldRedirectToOnboarding = params.get('redirect') === 'onboarding';
-
-            if (shouldRedirectToOnboarding) {
+            // Check if buyer needs onboarding
+            if (result.user && result.user.role === 'buyer' && !result.user.onboarding_completed) {
                 navigate('/onboarding');
             } else {
                 navigate('/');

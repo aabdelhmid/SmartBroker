@@ -70,11 +70,16 @@ export const AuthProvider = ({ children }) => {
             if (error) throw error;
 
             // Fetch user profile
-            const { data: profile } = await supabase
+            const { data: profile, error: profileError } = await supabase
                 .from('profiles')
                 .select('*')
                 .eq('id', data.user.id)
                 .single();
+
+            if (profileError) {
+                console.error('Profile fetch error:', profileError);
+                throw new Error('Could not load user profile');
+            }
 
             setUser(profile);
 
@@ -85,49 +90,90 @@ export const AuthProvider = ({ children }) => {
                 fetchInterests()
             ]);
 
-            return { success: true };
+            // Return user profile for redirect logic
+            return { success: true, user: profile };
         } catch (error) {
+            console.error('Login error:', error);
             return { success: false, error: error.message };
         }
     };
 
     const signup = async (userData) => {
         try {
-            // Create auth user
+            // Create auth user (database trigger will auto-create basic profile)
             const { data: authData, error: authError } = await supabase.auth.signUp({
                 email: userData.email,
-                password: userData.password
+                password: userData.password,
+                options: {
+                    emailRedirectTo: window.location.origin,
+                    data: {
+                        name: userData.name,
+                        role: userData.role
+                    }
+                }
             });
 
             if (authError) throw authError;
 
-            // Create profile
-            const { error: profileError } = await supabase
+            // Check if user was created
+            if (!authData.user) {
+                return {
+                    success: true,
+                    message: 'Please check your email to confirm your account.'
+                };
+            }
+
+            // Wait for trigger to create the profile
+            await new Promise(resolve => setTimeout(resolve, 1500));
+
+            // Update profile with additional details
+            const updates = {
+                phone: userData.phone,
+                status: 'active'
+            };
+
+            // Add buyer-specific fields
+            if (userData.role === 'buyer') {
+                updates.budget_min = userData.budget_min;
+                updates.budget_max = userData.budget_max;
+                updates.preferred_locations = userData.preferred_locations;
+                updates.preferred_property_types = userData.preferred_property_types;
+                updates.buying_intent = userData.buying_intent;
+            }
+
+            // Add marketer-specific fields
+            if (userData.role === 'marketer' || userData.role === 'developer') {
+                updates.company = userData.company;
+                updates.marketer_role = userData.marketerRole;
+                updates.office_location = userData.officeLocation;
+                updates.cr_number = userData.crNumber;
+            }
+
+            // Update the profile with additional details
+            const { error: updateError } = await supabase
                 .from('profiles')
-                .insert([{
-                    id: authData.user.id,
-                    email: userData.email,
-                    name: userData.name,
-                    role: userData.role,
-                    phone: userData.phone,
-                    // Buyer specific
-                    budget_min: userData.budget_min,
-                    budget_max: userData.budget_max,
-                    preferred_locations: userData.preferred_locations,
-                    preferred_property_types: userData.preferred_property_types,
-                    buying_intent: userData.buying_intent,
-                    // Marketer specific
-                    company: userData.company,
-                    marketer_role: userData.marketerRole,
-                    office_location: userData.officeLocation,
-                    cr_number: userData.crNumber,
-                    status: 'active'
-                }]);
+                .update(updates)
+                .eq('id', authData.user.id);
 
-            if (profileError) throw profileError;
+            if (updateError) {
+                console.error('Profile update error:', updateError);
+                // Don't throw - profile was created, just missing some details
+            }
 
-            return { success: true };
+            // Auto-login the user
+            const loginResult = await login(userData.email, userData.password);
+
+            if (!loginResult.success) {
+                return { success: false, error: 'Account created but auto-login failed. Please login manually.' };
+            }
+
+            // Return success with user role for redirect logic
+            return {
+                success: true,
+                shouldRedirectToOnboarding: userData.role === 'buyer'
+            };
         } catch (error) {
+            console.error('Signup error:', error);
             if (error.message.includes('already registered')) {
                 return { success: false, error: 'Email already exists.' };
             }

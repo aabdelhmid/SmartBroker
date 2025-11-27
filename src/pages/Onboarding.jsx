@@ -375,14 +375,24 @@ const Onboarding = () => {
         }
     };
 
-    // Redirect if not a buyer or already completed
-    if (!user || user.role !== 'buyer') {
-        navigate('/dashboard');
+    // Show loading while user data is being fetched
+    if (!user) {
+        return (
+            <div className="container" style={{ maxWidth: '700px', marginTop: '4rem', textAlign: 'center' }}>
+                <p>Loading...</p>
+            </div>
+        );
+    }
+
+    // Redirect non-buyers to dashboard
+    if (user.role !== 'buyer') {
+        navigate('/');
         return null;
     }
 
-    if (user.onboarding_completed) {
-        navigate('/dashboard');
+    // Redirect if onboarding already completed
+    if (user.onboarding_completed === true) {
+        navigate('/');
         return null;
     }
 
